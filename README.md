@@ -15,6 +15,25 @@ instruction file) loads on demand and uses to drive the public tools directly:
 all with the user's **own AWS credentials**. No special account, no vendored credential
 broker, no internal dependency.
 
+## Why
+
+Deploying CID normally means installing a CLI, reading CloudFormation parameter docs, and
+clicking through the console. This skill lets you just *ask*:
+
+> *"Deploy CUDOS in my account."*
+> *"Is my CUDOS dashboard up to date?"*
+> *"Set up CUR 2.0 data exports from account A into my data-collection account."*
+> *"Delete the KPI dashboard."*
+
+The agent loads the skill, resolves the friendly name to the right dashboard id, assembles
+the exact `cid-cmd` / CloudFormation invocation (including the fiddly Athena
+database/workgroup/datasource/CUR-table parameter chain that trips up unattended runs),
+runs it, and reads the result correctly — including CID's known quirks (the `status` command
+that prints a valid result and then throws an interactive-picker traceback, the "exit 0 can
+still be a failure" log convention, the off-PATH `cid-cmd` binary on macOS, and more). Those
+hard-won operational details are baked into the skill, so the agent gets them right the first
+time.
+
 ## What's here
 
 | File | Purpose |
@@ -29,10 +48,32 @@ broker, no internal dependency.
 ## Using it
 
 - **Kiro:** copy the skill folder into `~/.kiro/skills/cid-cmd-skill/` (or a workspace
-  `.kiro/skills/`); it activates on relevance.
+  `.kiro/skills/`); it activates on relevance. Then just chat.
 - **Claude:** the same `SKILL.md` + frontmatter format works as a Claude Agent Skill.
 - **Other agents:** the `SKILL.md` body is plain markdown — load it as a rules / instruction
   file (e.g. `AGENTS.md`).
+
+```bash
+# install for Kiro
+git clone https://github.com/hfranyie/cid-cmd-skill.git
+cp -r cid-cmd-skill ~/.kiro/skills/cid-cmd-skill
+# make sure cid-cmd and AWS creds are available
+pip install cid-cmd
+# then, in your agent:  "check the status of CUDOS and tell me if it needs updating"
+```
+
+### Example interaction
+
+> **You:** check the status of CUDOS and tell me if it needs updating
+>
+> **Agent:** *(loads the skill, locates `cid-cmd`, resolves "CUDOS" → `cudos-v5`, runs the
+> read-only status check, reads past the known picker traceback)*
+> CUDOS Dashboard v5 is **up to date** — version `v5.9.1 (latest)`, health **healthy**. No
+> update needed. (Note: datasets show 0 rows, which points to the underlying CUR data being
+> empty rather than a dashboard problem.)
+
+This exact exchange was run against live AWS with a fresh agent that had only the skill
+loaded — see [`VALIDATION.md`](./VALIDATION.md).
 
 ## Prerequisites (summarized — see `SKILL.md`)
 
