@@ -1,0 +1,6 @@
+# Never commit credentials or environment files
+*.env
+*.pem
+*credential*
+*secret*
+.aws/
