@@ -1,5 +1,9 @@
 # cid-cmd-skill
 
+> **⚠️ This repository is archived.** Development continues at
+> **[hfranyie/aws-cloud-intelligence-dashboards](https://github.com/hfranyie/aws-cloud-intelligence-dashboards)**.
+> Please use that repo for the latest version of the skill, issues, and pull requests.
+
 An **Agent Skill** for deploying and managing [AWS Cloud Intelligence Dashboards
 (CID)](https://github.com/aws-solutions-library-samples/cloud-intelligence-dashboards-framework)
 — CUDOS, Cost Intelligence, KPI, Trusted Advisor (TAO), CORA, Graviton, Health Events,
